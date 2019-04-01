@@ -1,0 +1,50 @@
+// Installs the CameraBatch package to your open maya session.
+
+proc string getPathFromProc(string $procName)
+{
+	string $whatIs = `whatIs $procName`;
+	string $parts[] = `stringToStringArray $whatIs ":"`;
+	// in case something went wrong:
+	if (size($parts) == 1)
+		return $parts[0];
+
+	// else if there are 2 items the second is the path:
+	string $path = $parts[1];
+	// or more than 2 the ":" separated them: reattach
+	if (size($parts) > 2)
+		for ($i = 2; $i < size($parts); $i++)
+			$path += ":" + $parts[$i];
+
+	return strip($path);
+}
+
+global proc setupCameraBatch()
+{
+	string $path = `getPathFromProc "setupCameraBatch"`;
+	string $dirPath = dirname($path);
+
+	string $userScriptDir = `internalVar -userScriptDir`;
+
+	if (`file -q -ex ($userScriptDir + "/CameraBatch")`)
+	{
+		string $response = `confirmDialog -t "Reinstall?" -m "Would you like to reinstall CameraBatch?" -button "Yes" -button "No" -dismissString "No"`;
+		if ($response == "Yes")
+		{
+			python "import shutil";
+			python ("shutil.rmtree(\"" + $userScriptDir + "/CameraBatch\")");
+		}
+		else
+		{
+			return;
+		}
+	}
+
+	// Copy the file path.
+	python "import shutil";
+	python ("shutil.copytree(\"" + $dirPath + "/CameraBatch\", \"" + $userScriptDir + "/CameraBatch\")");
+
+	confirmDialog -t "Installed" -m "CameraBatch has been installed!" -button "Okay";
+
+}
+
+setupCameraBatch();

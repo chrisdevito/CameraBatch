@@ -490,9 +490,13 @@ class MayaHooks(QtCore.QObject):
 
     def emit_output_changed(self, msg, msgType, *args):
 
-        if msg == ("Rendering Completed. "
-                   "See mayaRenderLog.txt for information."):
+        if "[Redshift] License returned" in msg:
             self.render_finished.emit()
+
+        elif msg == ("Rendering Completed. "
+                     "See mayaRenderLog.txt for information."):
+            self.render_finished.emit()
+
         elif msg == "Render Cancelled. ":
             self.render_cancelled.emit()
 

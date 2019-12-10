@@ -17,7 +17,6 @@ except ImportError:
     pass
 
 from .. import api
-reload(api)
 
 this_package = os.path.abspath(os.path.dirname(__file__))
 this_path = partial(os.path.join, this_package)

@@ -9,6 +9,7 @@ log = logging.getLogger('CameraBatch')
 
 def batch_camera(camera):
 
+    cmds.setAttr("defaultRenderGlobals.animation", 1)
     cmds.setAttr("defaultRenderGlobals.startFrame", camera.start_frame)
     cmds.setAttr("defaultRenderGlobals.endFrame", camera.end_frame)
 
